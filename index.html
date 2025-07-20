@@ -1,0 +1,151 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YOLOv8 Object Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      padding: 2rem;
+      width: 100%;
+      max-width: 720px;
+      text-align: center;
+    }
+
+    .button-group {
+      margin-top: 1.5rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    input[type="file"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 80%;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #output-img, #video {
+      margin-top: 1.5rem;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: none;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    @media (max-width: 768px) {
+      .card {
+        padding: 1rem;
+      }
+
+      input[type="file"] {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>YOLOv8 Object Detection</h1>
+  <div class="card">
+    <form id="upload-form" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*">
+      <button type="submit">Upload Image</button>
+    </form>
+
+    <div class="button-group">
+      <button onclick="startWebcam()">Start Webcam Detection</button>
+    </div>
+
+    <img id="output-img" />
+    <img id="video" src="" />
+  </div>
+
+  <footer>
+    &copy; 2025 YOLOv8 Object Detection | Built with 💡 by a Smart Dev
+  </footer>
+
+  <script>
+    const uploadForm = document.getElementById('upload-form');
+    const outputImg = document.getElementById('output-img');
+    const video = document.getElementById('video');
+
+    uploadForm.onsubmit = async function (e) {
+      e.preventDefault();
+      const formData = new FormData(uploadForm);
+
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      outputImg.src = url;
+      outputImg.style.display = 'block';
+      video.style.display = 'none';
+    };
+
+    function startWebcam() {
+      video.src = '/video_feed';
+      video.style.display = 'block';
+      outputImg.style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
